@@ -1,0 +1,22 @@
+{
+  "name": "spoon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22",
+    "peer": "^1.0.0",
+    "socket.io": "^4.6.1",
+    "uuid": "^9.0.0",
+    "uuidv4": "^6.2.13"
+  }
+}
