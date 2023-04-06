@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zoom Clone</title>
+    <link rel="stylesheet" href="public/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="Name-Page">
+        <div class="form">
+            <form class="host-form" action="/host">
+                <label for="Name">Name:
+                    <input type="text" name="name" required>
+                </label>
+                <br>
+                <button type="submit">Host a Meeting</button>
+                <p><a href="#" onclick="toggleForms()">Join Meeting?</a></p>
+            </form>
+
+            <form class="join-form" action="/join">
+                <label for="RoomId">Room:
+                    <input type="number" name="room" required>
+                </label>
+                <br>
+                <label for="Name">Name:
+                    <input type="text" name="name" required>
+                </label>
+                <br>
+                <button type="submit">Join Meeting</button>
+                <p><a href="#" onclick="toggleForms()">Host Meeting?</a></p>
+            </form>
+        </div>
+    </div>
+    <script>
+        function toggleForms() {
+            $('.host-form, .join-form').toggle();
+        }
+
+        // Hide the join form by default
+        $('.host-form').hide();
+    </script>
+</body>
+
+</html>
