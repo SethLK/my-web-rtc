@@ -323,3 +323,119 @@ mic_m.addEventListener('click', () => {
 wrapper.append(video_m, mic_m);
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+raw code
+
+const socket = io('/');
+const videoGrid = document.getElementById('video-grid');
+const myPeer = new Peer(undefined, {
+  host: '0.peerjs.com',
+  port: 443,
+  secure: true,
+  path: '/'
+});
+
+const myVideo = document.createElement('video');
+myVideo.muted = true;
+
+const peers = {};
+let stream; // Declare the stream variable here
+
+myPeer.on('open', (id) => {
+  navigator.mediaDevices
+    .getUserMedia({ video: true, audio: true })
+    .then((userStream) => {
+      stream = userStream; // Assign the stream to the variable
+
+      addVideoStream(myVideo, stream);
+
+      socket.emit('join-room', ROOM_ID, id);
+
+      myPeer.on('call', (call) => {
+        call.answer(stream);
+        const video = document.createElement('video');
+        call.on('stream', (userVideoStream) => {
+          addVideoStream(video, userVideoStream);
+        });
+        call.on('close', () => {
+          video.remove();
+        });
+
+        peers[call.peer] = call;
+      });
+
+      socket.on('user-connected', (userId) => {
+        connectToNewUser(userId, stream);
+      });
+
+      socket.on('user-disconnected', (userId) => {
+        if (peers[userId]) peers[userId].close();
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
+function connectToNewUser(userId, stream) {
+  const call = myPeer.call(userId, stream);
+  const video = document.createElement('video');
+  call.on('stream', (userVideoStream) => {
+    addVideoStream(video, userVideoStream);
+  });
+  call.on('close', () => {
+    video.remove();
+  });
+
+  peers[userId] = call;
+}
+
+function addVideoStream(video, stream) {
+  video.srcObject = stream;
+  video.addEventListener('loadedmetadata', () => {
+    video.play();
+  });
+  videoGrid.append(video);
+}
+
+const wrapper = document.getElementsByClassName('wrapper')[0]; // Get the first element with the "wrapper" class
+
+const video_m = document.createElement('button');
+video_m.classList.add('btn', 'btn-outline-secondary');
+video_m.innerHTML = ` Stop Video`;
+
+video_m.addEventListener('click', () => {
+  const videoTrack = myVideo.srcObject.getVideoTracks()[0];
+  videoTrack.enabled = !videoTrack.enabled;
+  video_m.innerHTML = videoTrack.enabled ? `Start Video`;
+});
+
+const mic_m = document.createElement('button');
+mic_m.classList.add('btn', 'btn-outline-secondary');
+mic_m.innerHTML = ` Mute`
+
+mic_m.addEventListener('click', () => {
+  const audioTrack = stream.getAudioTracks()[0];
+  audioTrack.enabled = !audioTrack.enabled;
+  mic_m.innerHTML = audioTrack.enabled ? ` Mute` : ` Unmute`;
+});
+
+const linkBtn = document.createElement('button');
+linkBtn.type = 'button';
+linkBtn.classList.add('btn', 'btn-danger');
+linkBtn.innerHTML = ` Leave`
+
+// Set the link URL
+const linkUrl = '/';
+
+// Add a click event listener to redirect to the link URL
+linkBtn.addEventListener('click', () => {
+  window.location.href = linkUrl;
+});
+
+// Append the link button to a container element
+
+
+
+wrapper.append(video_m, mic_m, linkBtn);
+
