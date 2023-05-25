@@ -1,0 +1,28 @@
+.from-wrapper {
+    width: 250px; /* Adjust the width as needed */
+    margin: 25px auto; /* Center the element horizontally */
+    padding: 20px; /* Adjust the padding as needed */
+    border: 2px solid black;
+  }
+  
+  .from-wrapper form {
+    margin-top: 15px; /* Add some space between the forms */
+  }
+  
+  .from-wrapper label {
+    display: block; /* Place labels on separate lines */
+    margin-bottom: 10px; /* Add some space between labels */
+  }
+  
+  .from-wrapper input[type="text"],
+  .from-wrapper input[type="number"] {
+    width: 100%; /* Make the input fields span the full width */
+    padding: 5px; /* Adjust the padding as needed */
+    margin-bottom: 10px; /* Add some space between input fields */
+  }
+  
+  .from-wrapper button {
+    width: 100%; /* Make the buttons span the full width */
+    margin-top: 10px; /* Add some space above the buttons */
+  }
+  

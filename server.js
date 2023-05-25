@@ -3,6 +3,8 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
+const { v4: uuidv4 } = require('uuid');
+
 
 const { ExpressPeerServer } = require('peer');
 const peerServer = ExpressPeerServer(server, {
@@ -29,7 +31,8 @@ app.get('/host', (req, res) => {
 
 app.get('/join', (req, res) => {
   name = req.query.name;
-  res.redirect(`/room/${req.query.room}`);
+  roomId = req.query.room
+  res.redirect(`/room/${roomId}`);
 });
 
 // Define the delay time in milliseconds
@@ -55,13 +58,17 @@ app.get('/room/:room', (req, res) => {
   }
 });
 
+
+
 io.on('connection', socket => {
   socket.on('join-room', (roomId, userId) => {
     socket.join(roomId)
     socket.broadcast.to(roomId).emit('user-connected', userId)
+    console.log(`${userId} is joined to ${roomId}`)
 
     socket.on('disconnect', () => {
       socket.broadcast.to(roomId).emit('user-disconnected', userId)
+      console.log(`${userId} is disconnected to ${roomId}`)
     })
   })
 })

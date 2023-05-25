@@ -6,11 +6,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zoom Clone</title>
-    <link rel="stylesheet" href="src/style.css" />
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/src/index.css">
 </head>
 
 <body>
+    <div class="from-wrapper">
     <div class="Name-Page">
         <div class="form">
             <form class="host-form" action="/host">
@@ -18,8 +23,9 @@
                     <input type="text" name="name" required>
                 </label>
                 <br>
-                <button type="submit">Host a Meeting</button>
-                <p><a href="#" onclick="toggleForms()">Join Meeting?</a></p>
+                <button type="submit" class="btn btn-primary">Host a Meeting</button>
+                <br>
+                <button onclick="toggleForms()" class="btn btn-primary">Join Meeting?</button>
             </form>
 
             <form class="join-form" action="/join">
@@ -31,11 +37,14 @@
                     <input type="text" name="name" required>
                 </label>
                 <br>
-                <button type="submit">Join Meeting</button>
-                <p><a href="#" onclick="toggleForms()">Host Meeting?</a></p>
+                <button type="submit" class="btn btn-primary">Join Meeting</button>
+                <br>
+                <br>
+                <button onclick="toggleForms()" class="btn btn-primary">Host Meeting?</button>
             </form>
         </div>
     </div>
+</div>
     <script>
         function toggleForms() {
             $('.host-form, .join-form').toggle();
@@ -44,6 +53,9 @@
         // Hide the join form by default
         $('.host-form').hide();
     </script>
+    
+
+
 
 </body>
 
