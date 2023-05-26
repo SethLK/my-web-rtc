@@ -1,3 +1,5 @@
+// script.js
+
 const socket = io('/');
 const videoGrid = document.getElementById('video-grid');
 const myPeer = new Peer(undefined, {
@@ -9,25 +11,27 @@ const myPeer = new Peer(undefined, {
 
 const myVideo = document.createElement('video');
 myVideo.muted = true;
-
 const peers = {};
-let stream; // Declare the stream variable here
+let stream;
+var OtherUsername = "";
+
+// Define the myname variable with the desired name
+
+
 
 myPeer.on('open', (id) => {
-  navigator.mediaDevices
-    .getUserMedia({ video: true, audio: true })
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then((userStream) => {
-      stream = userStream; // Assign the stream to the variable
+      stream = userStream;
+      addVideoStream(myVideo, stream, id, myname);
 
-      addVideoStream(myVideo, stream);
-
-      socket.emit('join-room', ROOM_ID, id);
+      socket.emit('join-room', ROOM_ID, id, myname);
 
       myPeer.on('call', (call) => {
         call.answer(stream);
         const video = document.createElement('video');
         call.on('stream', (userVideoStream) => {
-          addVideoStream(video, userVideoStream);
+          addVideoStream(video, userVideoStream, call.peer, myname);
         });
         call.on('close', () => {
           video.remove();
@@ -36,11 +40,11 @@ myPeer.on('open', (id) => {
         peers[call.peer] = call;
       });
 
-      socket.on('user-connected', (userId) => {
-        connectToNewUser(userId, stream);
+      socket.on('user-connected', (userId, username) => {
+        connectToNewUser(userId, stream, username);
       });
 
-      socket.on('user-disconnected', (userId) => {
+      socket.on('user-disconnected', (userId, username) => {
         if (peers[userId]) peers[userId].close();
       });
     })
@@ -49,26 +53,54 @@ myPeer.on('open', (id) => {
     });
 });
 
-function connectToNewUser(userId, stream) {
+// Rest of your code...
+
+socket.on("AddName", (username) => {
+  OtherUsername = username;
+  console.log(username);
+});
+
+
+function connectToNewUser(userId, stream, myname) {
   const call = myPeer.call(userId, stream);
   const video = document.createElement('video');
   call.on('stream', (userVideoStream) => {
-    addVideoStream(video, userVideoStream);
+    addVideoStream(video, userVideoStream, userId, myname);
   });
   call.on('close', () => {
+    const videoWrapper = document.getElementById(`video-wrapper-${userId}`);
+    if (videoWrapper) {
+      videoWrapper.remove();
+    }
     video.remove();
   });
 
   peers[userId] = call;
 }
 
-function addVideoStream(video, stream) {
+
+function addVideoStream(video, stream, userId, name) {
   video.srcObject = stream;
   video.addEventListener('loadedmetadata', () => {
     video.play();
   });
-  videoGrid.append(video);
+
+  const videoWrapper = document.getElementById(`video-wrapper-${userId}`);
+  if (!videoWrapper) {
+    const newVideoWrapper = document.createElement('div');
+    newVideoWrapper.id = `video-wrapper-${userId}`;
+    newVideoWrapper.classList.add('video_wrapper');
+
+    const nameElement = document.createElement('p');
+    nameElement.innerText = name;
+
+    newVideoWrapper.appendChild(video);
+    newVideoWrapper.appendChild(nameElement);
+    videoGrid.append(newVideoWrapper);
+  }
 }
+
+
 
 const wrapper = document.getElementsByClassName('wrapper')[0]; // Get the first element with the "wrapper" class
 
