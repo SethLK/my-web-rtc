@@ -57,6 +57,13 @@ myPeer.on('open', (id) => {
 
 socket.on("AddName", (username) => {
   OtherUsername = username;
+  const myVideoWrapper = document.getElementById(`video-wrapper-${userId}`);
+  if (myVideoWrapper) {
+    const nameElement = myVideoWrapper.querySelector('.username');
+    if (nameElement) {
+      nameElement.innerText = myname;
+    }
+  }
   console.log(username);
 });
 
@@ -79,6 +86,7 @@ function connectToNewUser(userId, stream, myname) {
 }
 
 
+
 function addVideoStream(video, stream, userId, name) {
   video.srcObject = stream;
   video.addEventListener('loadedmetadata', () => {
@@ -97,8 +105,12 @@ function addVideoStream(video, stream, userId, name) {
     newVideoWrapper.appendChild(video);
     newVideoWrapper.appendChild(nameElement);
     videoGrid.append(newVideoWrapper);
+
+    // Store the name in the peers object
+
   }
 }
+
 
 
 
