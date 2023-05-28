@@ -106,13 +106,8 @@ function addVideoStream(video, stream, userId, name) {
     newVideoWrapper.appendChild(nameElement);
     videoGrid.append(newVideoWrapper);
 
-    // Store the name in the peers object
-
   }
 }
-
-
-
 
 const wrapper = document.getElementsByClassName('wrapper')[0]; // Get the first element with the "wrapper" class
 
