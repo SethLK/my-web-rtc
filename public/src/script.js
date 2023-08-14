@@ -105,7 +105,6 @@ function addVideoStream(video, stream, userId, name) {
     newVideoWrapper.appendChild(video);
     newVideoWrapper.appendChild(nameElement);
     videoGrid.append(newVideoWrapper);
-
   }
 }
 
@@ -167,4 +166,3 @@ leaveBtn.addEventListener('click', () => {
 // Append the link button to a container element
 
 wrapper.append(video_m, mic_m, leaveBtn, );
-
